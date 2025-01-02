@@ -219,14 +219,14 @@ public class proyecto {
      * Representa un evento con atributos básicos como ID, título, fecha, horas, ubicación, descripción y URL.
      */
     public static class Event {
-        private String id;
-        private String title;
-        private LocalDate date;
-        private LocalTime startTime;
-        private LocalTime endTime;
-        private String location;
-        private String description;
-        private String url;
+        private final String id;
+        private final String title;
+        private final LocalDate date;
+        private final LocalTime startTime;
+        private final LocalTime endTime;
+        private final String location;
+        private final String description;
+        private final String url;
 
 
         /**
