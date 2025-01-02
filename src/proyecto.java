@@ -9,8 +9,6 @@ public class proyecto {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Scanner input = new Scanner(System.in);
 
-
-
     /**
      * Convierte una cadena de texto en una hora usando un formato específico.
      *
@@ -18,7 +16,6 @@ public class proyecto {
      * @return Un objeto {@code LocalTime} con la hora especificada.
      * @throws RuntimeException si el formato es inválido.
      */
-
     private static LocalTime parsearHora(String hora) {
         try {
             // Intenta con el formato HH:mm
@@ -271,7 +268,7 @@ public class proyecto {
     }
 
     /**
-     * Método principal que gestiona el menú del programa.
+     * Método principal que gestiona el menuú del programa
      * Permite al usuario interactuar con las funciones de gestión de eventos.
      *
      * @param args Argumentos de la línea de comandos (no se usan).
