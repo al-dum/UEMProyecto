@@ -229,7 +229,15 @@ public class proyecto {
 
     public static void main(String[] args) {
         while (true) {
-            System.out.println("Elija que desea hacer: i (ver los eventos), + (añadir evento), - (quitar evento), e (editar evento), s (salir)");
+            System.out.println("""
+                                        Elija que desea hacer: 
+                                        i (ver los eventos)
+                                        + (añadir evento) 
+                                        - (quitar evento) 
+                                        e (editar evento) 
+                                        s (salir)"
+                                       """
+                              );
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
