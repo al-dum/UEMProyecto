@@ -7,7 +7,7 @@ import java.util.*;
 public class proyecto {
     private static final String archivo = "/Users/aldozamora/Documents/IntellijProjects/UEMProyecto/src/Gestion_de_Eventos.csv";
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final Scanner input = new Scanner(System.in);
 
     private static LocalTime parsearHora(String hora) {
         try {
@@ -56,28 +56,28 @@ public class proyecto {
              BufferedWriter bw = new BufferedWriter(fw)) {
 
             System.out.println("Ingrese ID del evento:");
-            String id = scanner.nextLine();
+            String id = input.nextLine();
 
             System.out.println("Ingrese título del evento:");
-            String title = scanner.nextLine();
+            String title = input.nextLine();
 
             System.out.println("Ingrese fecha (dd/MM/yyyy):");
-            LocalDate date = LocalDate.parse(scanner.nextLine(), dateFormatter);
+            LocalDate date = LocalDate.parse(input.nextLine(), dateFormatter);
 
             System.out.println("Ingrese hora de inicio (H:mm o HH:mm):");
-            LocalTime startTime = parsearHora(scanner.nextLine());
+            LocalTime startTime = parsearHora(input.nextLine());
 
             System.out.println("Ingrese hora de fin (H:mm o HH:mm):");
-            LocalTime endTime = parsearHora(scanner.nextLine());
+            LocalTime endTime = parsearHora(input.nextLine());
 
             System.out.println("Ingrese lugar:");
-            String location = scanner.nextLine();
+            String location = input.nextLine();
 
             System.out.println("Ingrese descripción:");
-            String description = scanner.nextLine();
+            String description = input.nextLine();
 
             System.out.println("Ingrese URL del evento (o Enter si no hay):");
-            String url = scanner.nextLine();
+            String url = input.nextLine();
 
             Event newEvent = new Event(id, title, date, startTime, endTime, location, description, url);
             bw.write(String.format("%s;%s;%s;%s;%s;%s;%s;%s%n",
@@ -100,7 +100,7 @@ public class proyecto {
         try {
             List<String> lines = new ArrayList<>();
             System.out.println("Ingrese el ID del evento a eliminar:");
-            String idToRemove = scanner.nextLine();
+            String idToRemove = input.nextLine();
 
             try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
                 String line;
@@ -127,7 +127,7 @@ public class proyecto {
         try {
             List<String> lines = new ArrayList<>();
             System.out.println("Ingrese el ID del evento a editar:");
-            String idToEdit = scanner.nextLine();
+            String idToEdit = input.nextLine();
             boolean found = false;
 
             try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
@@ -138,25 +138,25 @@ public class proyecto {
                         String[] parts = line.split(";");
 
                         System.out.println("Ingrese nuevo título (o Enter para mantener):");
-                        String title = scanner.nextLine();
+                        String title = input.nextLine();
 
                         System.out.println("Ingrese nueva fecha (dd/MM/yyyy, o Enter para mantener):");
-                        String date = scanner.nextLine();
+                        String date = input.nextLine();
 
                         System.out.println("Ingrese nueva hora de inicio (H:mm o Enter para mantener):");
-                        String startTime = scanner.nextLine();
+                        String startTime = input.nextLine();
 
                         System.out.println("Ingrese nueva hora de fin (H:mm o Enter para mantener):");
-                        String endTime = scanner.nextLine();
+                        String endTime = input.nextLine();
 
                         System.out.println("Ingrese nuevo lugar (o Enter para mantener):");
-                        String location = scanner.nextLine();
+                        String location = input.nextLine();
 
                         System.out.println("Ingrese nueva descripción (o Enter para mantener):");
-                        String description = scanner.nextLine();
+                        String description = input.nextLine();
 
                         System.out.println("Ingrese nueva URL (o Enter para mantener):");
-                        String url = scanner.nextLine();
+                        String url = input.nextLine();
 
                         lines.add(String.format("%s;%s;%s;%s;%s;%s;%s;%s",
                                                 idToEdit,
@@ -238,7 +238,7 @@ public class proyecto {
                                         s (salir)"
                                        """
                               );
-            String choice = scanner.nextLine().trim();
+            String choice = input.nextLine().trim();
 
             switch (choice) {
                 case "i":
