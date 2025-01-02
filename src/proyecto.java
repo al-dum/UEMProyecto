@@ -268,7 +268,7 @@ public class proyecto {
     }
 
     /**
-     * Método principal que gestiona el menuú del programa
+     * Méthod principal que gestiona el menú del código.
      * Permite al usuario interactuar con las funciones de gestión de eventos.
      *
      * @param args Argumentos de la línea de comandos (no se usan).
@@ -276,13 +276,13 @@ public class proyecto {
     public static void main(String[] args) {
         while (true) {
             System.out.println("""
-                                        Elija que desea hacer: 
+                                        Elija que desea hacer:\s
                                         i (ver los eventos)
-                                        + (añadir evento) 
-                                        - (quitar evento) 
-                                        e (editar evento) 
+                                        + (añadir evento)\s
+                                        - (quitar evento)\s
+                                        e (editar evento)\s
                                         s (salir)"
-                                       """
+                                      \s"""
                               );
             String choice = input.nextLine().trim();
 
