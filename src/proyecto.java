@@ -9,16 +9,8 @@ public class proyecto {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Scanner input = new Scanner(System.in);
 
-    /**
-     * Convierte una cadena de texto en una hora usando un formato específico.
-     *
-     * @param hora Cadena que representa la hora en formato "H:mm".
-     * @return Un objeto {@code LocalTime} con la hora especificada.
-     * @throws RuntimeException si el formato es inválido.
-     */
     private static LocalTime parsearHora(String hora) {
         try {
-            // Intenta con el formato HH:mm
             return LocalTime.parse(hora, DateTimeFormatter.ofPattern("H:mm"));
         } catch (Exception e) {
             System.out.println("Formato de hora inválido: " + hora);
@@ -26,15 +18,9 @@ public class proyecto {
         }
     }
 
-
-    /**
-     * Lee y muestra los eventos registrados en el archivo CSV.
-     * Cada línea representa un evento con sus atributos separados por punto y coma.
-     */
     private static void mostrarEventos() {
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String line;
-            // Leer e ignorar la primera linea
             br.readLine();
             System.out.println("Eventos registrados:");
 
@@ -43,14 +29,11 @@ public class proyecto {
                     String[] parts = line.split(";");
                     if (parts.length >= 7) {
                         System.out.println(new Event(
-                                parts[0],  // ID
-                                parts[1],  // Nombre de evento
-                                LocalDate.parse(parts[2], dateFormatter),  // Fecha
-                                LocalTime.parse(parts[3], DateTimeFormatter.ofPattern("H:mm")),  // Hora de inicio
-                                LocalTime.parse(parts[4], DateTimeFormatter.ofPattern("H:mm")),  // Hora de fin
-                                parts[5],  // Ubicación
-                                parts[6],  // Descripción
-                                parts[7]   // URL
+                                parts[0], parts[1],
+                                LocalDate.parse(parts[2], dateFormatter),
+                                LocalTime.parse(parts[3], DateTimeFormatter.ofPattern("H:mm")),
+                                LocalTime.parse(parts[4], DateTimeFormatter.ofPattern("H:mm")),
+                                parts[5], parts[6], parts[7]
                         ));
                     }
                 } catch (Exception e) {
@@ -63,10 +46,6 @@ public class proyecto {
         }
     }
 
-    /**
-     * Permite al usuario añadir un nuevo evento al archivo CSV.
-     * Solicita información detallada del evento y la guarda.
-     */
     private static void añadirEvento() {
         try (FileWriter fw = new FileWriter(archivo, true);
              BufferedWriter bw = new BufferedWriter(fw)) {
@@ -89,22 +68,21 @@ public class proyecto {
             System.out.println("Ingrese lugar:");
             String location = input.nextLine();
 
-            System.out.println("Ingrese descripción:");
-            String description = input.nextLine();
+            System.out.println("Ingrese el grupo de la reunión (1: Estudiantes, 2: Profesores, 3: Comunidad universitaria):");
+            int description = Integer.parseInt(input.nextLine());
+            if (description < 1 || description > 3) {
+                throw new IllegalArgumentException("Descripción debe ser un número entre 1 y 3.");
+            }
 
             System.out.println("Ingrese URL del evento (o Enter si no hay):");
             String url = input.nextLine();
 
-            Event newEvent = new Event(id, title, date, startTime, endTime, location, description, url);
-            bw.write(String.format("%s;%s;%s;%s;%s;%s;%s;%s%n",
-                                   id,
-                                   title,
-                                   date.format(dateFormatter),
+            Event newEvent = new Event(id, title, date, startTime, endTime, location, String.valueOf(description), url);
+            bw.write(String.format("%s;%s;%s;%s;%s;%s;%d;%s%n",
+                                   id, title, date.format(dateFormatter),
                                    startTime.format(DateTimeFormatter.ofPattern("H:mm")),
                                    endTime.format(DateTimeFormatter.ofPattern("H:mm")),
-                                   location,
-                                   description,
-                                   url));
+                                   location, description, url));
 
             System.out.println("Evento añadido exitosamente!");
         } catch (IOException e) {
@@ -112,23 +90,27 @@ public class proyecto {
         }
     }
 
-
-    /**
-     * Elimina un evento del archivo CSV según el ID proporcionado por el usuario.
-     */
     private static void quitarEvento() {
         try {
             List<String> lines = new ArrayList<>();
             System.out.println("Ingrese el ID del evento a eliminar:");
             String idToRemove = input.nextLine();
+            boolean found = false;
 
             try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if (!line.startsWith(idToRemove + ";")) {
+                    if (line.startsWith(idToRemove + ";")) {
+                        found = true;
+                    } else {
                         lines.add(line);
                     }
                 }
+            }
+
+            if (!found) {
+                System.out.println("El evento con ID " + idToRemove + " no existe.");
+                return;
             }
 
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivo))) {
@@ -136,17 +118,13 @@ public class proyecto {
                     bw.write(line);
                     bw.newLine();
                 }
-                System.out.println("Evento eliminado exitosamente!");
             }
+            System.out.println("Evento eliminado exitosamente!");
         } catch (IOException e) {
             System.out.println("Error al eliminar evento: " + e.getMessage());
         }
     }
 
-    /**
-     * Permite al usuario editar los detalles de un evento existente.
-     * El evento se identifica por su ID.
-     */
     private static void editarEvento() {
         try {
             List<String> lines = new ArrayList<>();
@@ -176,20 +154,24 @@ public class proyecto {
                         System.out.println("Ingrese nuevo lugar (o Enter para mantener):");
                         String location = input.nextLine();
 
-                        System.out.println("Ingrese nueva descripción (o Enter para mantener):");
-                        String description = input.nextLine();
+                        System.out.println("Ingrese nuevo grupo de la reunión (1, 2, 3 o Enter para mantener):");
+                        String descriptionInput = input.nextLine();
+                        int newDescription = descriptionInput.isEmpty() ? Integer.parseInt(parts[6]) : Integer.parseInt(descriptionInput);
+                        if (newDescription < 1 || newDescription > 3) {
+                            throw new IllegalArgumentException("El grupo debe ser 1, 2 o 3.");
+                        }
 
                         System.out.println("Ingrese nueva URL (o Enter para mantener):");
                         String url = input.nextLine();
 
-                        lines.add(String.format("%s;%s;%s;%s;%s;%s;%s;%s",
+                        lines.add(String.format("%s;%s;%s;%s;%s;%s;%d;%s",
                                                 idToEdit,
                                                 title.isEmpty() ? parts[1] : title,
                                                 date.isEmpty() ? parts[2] : LocalDate.parse(date, dateFormatter).format(dateFormatter),
                                                 startTime.isEmpty() ? parts[3] : parsearHora(startTime).format(DateTimeFormatter.ofPattern("H:mm")),
                                                 endTime.isEmpty() ? parts[4] : parsearHora(endTime).format(DateTimeFormatter.ofPattern("H:mm")),
                                                 location.isEmpty() ? parts[5] : location,
-                                                description.isEmpty() ? parts[6] : description,
+                                                newDescription,
                                                 url.isEmpty() ? parts[7] : url));
                     } else {
                         lines.add(line);
@@ -208,16 +190,12 @@ public class proyecto {
                     bw.newLine();
                 }
             }
-
             System.out.println("Evento editado exitosamente!");
         } catch (IOException e) {
             System.out.println("Error al editar evento: " + e.getMessage());
         }
     }
 
-    /**
-     * Representa un evento con atributos básicos como ID, título, fecha, horas, ubicación, descripción y URL.
-     */
     public static class Event {
         private final String id;
         private final String title;
@@ -228,19 +206,6 @@ public class proyecto {
         private final String description;
         private final String url;
 
-
-        /**
-         * Constructor de la clase Event.
-         *
-         * @param id Identificador único del evento.
-         * @param title Título del evento.
-         * @param date Fecha del evento.
-         * @param startTime Hora de inicio del evento.
-         * @param endTime Hora de finalización del evento.
-         * @param location Ubicación del evento.
-         * @param description Descripción del evento.
-         * @param url URL asociada al evento (opcional).
-         */
         public Event(String id, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String location, String description, String url) {
             this.id = id;
             this.title = title;
@@ -261,49 +226,34 @@ public class proyecto {
                     ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("H:mm")) +
                     ", endTime=" + endTime.format(DateTimeFormatter.ofPattern("H:mm")) +
                     ", location='" + location + '\'' +
-                    ", description='" + description + '\'' +
+                    ", description=" + description +
                     ", url='" + url + '\'' +
                     '}';
         }
     }
 
-    /**
-     * Méthod principal que gestiona el menú del código.
-     * Permite al usuario interactuar con las funciones de gestión de eventos.
-     *
-     * @param args Argumentos de la línea de comandos (no se usan).
-     */
     public static void main(String[] args) {
         while (true) {
             System.out.println("""
-                                        Elija que desea hacer:\s
-                                        i (ver los eventos)
-                                        + (añadir evento)\s
-                                        - (quitar evento)\s
-                                        e (editar evento)\s
-                                        s (salir)"
-                                      \s"""
-                              );
+                    Elija que desea hacer:
+                    i (ver los eventos)
+                    + (añadir evento)
+                    - (quitar evento)
+                    e (editar evento)
+                    s (salir)
+                    """);
             String choice = input.nextLine().trim();
 
             switch (choice) {
-                case "i":
-                    mostrarEventos();
-                    break;
-                case "+":
-                    añadirEvento();
-                    break;
-                case "-":
-                    quitarEvento();
-                    break;
-                case "e":
-                    editarEvento();
-                    break;
-                case "s":
+                case "i" -> mostrarEventos();
+                case "+" -> añadirEvento();
+                case "-" -> quitarEvento();
+                case "e" -> editarEvento();
+                case "s" -> {
                     System.out.println("¡Hasta luego!");
                     return;
-                default:
-                    System.out.println("Opción no válida");
+                }
+                default -> System.out.println("Opción no válida");
             }
         }
     }
