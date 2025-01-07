@@ -4,11 +4,23 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+
+/**
+ * Clase principal para gestionar eventos almacenados en un archivo CSV.
+ * Permite visualizar, añadir, editar y eliminar eventos.
+ */
 public class proyecto {
     private static final String archivo = "/Users/aldozamora/Documents/IntellijProjects/UEMProyecto/src/Gestion_de_Eventos.csv";
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Scanner input = new Scanner(System.in);
 
+
+    /**
+     * Convierte una cadena en formato "H:mm" a un objeto LocalTime.
+     *
+     * @param hora la hora en formato "H:mm".
+     * @return el objeto LocalTime correspondiente.
+     */
     private static LocalTime parsearHora(String hora) {
         try {
             return LocalTime.parse(hora, DateTimeFormatter.ofPattern("H:mm"));
@@ -18,6 +30,9 @@ public class proyecto {
         }
     }
 
+    /**
+     * Muestra los eventos almacenados en el archivo CSV.
+     */
     private static void mostrarEventos() {
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String line;
@@ -46,6 +61,9 @@ public class proyecto {
         }
     }
 
+    /**
+     * Añade un nuevo evento al archivo CSV.
+     */
     private static void añadirEvento() {
         try (FileWriter fw = new FileWriter(archivo, true);
              BufferedWriter bw = new BufferedWriter(fw)) {
@@ -90,6 +108,9 @@ public class proyecto {
         }
     }
 
+    /**
+     * Elimina un evento del archivo CSV según su ID.
+     */
     private static void quitarEvento() {
         try {
             List<String> lines = new ArrayList<>();
@@ -125,6 +146,9 @@ public class proyecto {
         }
     }
 
+    /**
+     * Edita un evento existente en el archivo CSV.
+     */
     private static void editarEvento() {
         try {
             List<String> lines = new ArrayList<>();
@@ -196,6 +220,9 @@ public class proyecto {
         }
     }
 
+    /**
+     * Representa un evento con detalles como título, fecha, hora y lugar.
+     */
     public static class Event {
         private final String id;
         private final String title;
@@ -206,6 +233,18 @@ public class proyecto {
         private final String description;
         private final String url;
 
+        /**
+         * Constructor para inicializar un evento.
+         *
+         * @param id          Identificador único del evento.
+         * @param title       Título del evento.
+         * @param date        Fecha del evento.
+         * @param startTime   Hora de inicio del evento.
+         * @param endTime     Hora de fin del evento.
+         * @param location    Lugar del evento.
+         * @param description Descripción del evento (grupo al que pertenece).
+         * @param url         URL del evento.
+         */
         public Event(String id, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String location, String description, String url) {
             this.id = id;
             this.title = title;
@@ -232,6 +271,11 @@ public class proyecto {
         }
     }
 
+    /**
+     * Método principal del programa.
+     *
+     * @param args Argumentos de línea de comando.
+     */
     public static void main(String[] args) {
         while (true) {
             System.out.println("""
