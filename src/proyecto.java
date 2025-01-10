@@ -4,12 +4,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-
-/*
-ideas:
-poner una excepcion en las fechas y los url para que no crasheen
-cambiar el id a un raondomizador
- */
 /**
  * Clase principal para gestionar eventos almacenados en un archivo CSV.
  * Permite visualizar, añadir, editar y eliminar eventos.
@@ -65,9 +59,6 @@ public class proyecto {
             throw e;
         }
     }
-
-    //hacer el id que se haga solo con un randomizador de 6 digitos
-
     /**
      * Muestra los eventos almacenados en el archivo CSV.
      */
@@ -95,7 +86,7 @@ public class proyecto {
                         continue;
                     }
 
-                    // Validate and parse each field before creating the Event
+                    // Validar cada seccion antes de parsear
                     String id = parts[0].trim();
                     String title = parts[1].trim();
                     LocalDate date;
@@ -121,7 +112,7 @@ public class proyecto {
                     String description = parts[6].trim();
                     String url = parts[7].trim();
 
-                    // Create and display the event
+                    // Crear y mostrar evento
                     Event event = new Event(id, title, date, startTime, endTime, location, description, url);
                     System.out.println(event);
                     eventCount++;
@@ -179,7 +170,7 @@ public class proyecto {
                     String endTimeStr = input.nextLine();
                     LocalTime tempEndTime = parsearHora(endTimeStr);
 
-                    // Validate that end time is after start time
+                    // chechar que la hora fin es despues de la inicial
                     if (tempEndTime.isBefore(startTime)) {
                         System.out.println("Error: La hora de fin debe ser posterior a la hora de inicio");
                         continue;
